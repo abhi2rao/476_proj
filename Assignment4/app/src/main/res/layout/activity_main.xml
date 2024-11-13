@@ -8,25 +8,7 @@
     android:background="#95D1ED"
     tools:context=".MainActivity">
 
-    <!--Used ChatGpt to understand how to write constraints-->
-
-    <!--button to send user to location selection page-->
-    <Button
-        android:id="@+id/StartMyAdventure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="Start My Adventure!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Title" />
-        <!--app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-    <!--Title-->
+    <!-- Title -->
     <EditText
         android:id="@+id/Title"
         android:layout_width="wrap_content"
@@ -40,23 +22,62 @@
         android:textColor="#FFC107"
         android:textSize="48sp"
         android:typeface="serif"
-        app:layout_constraintBottom_toTopOf="@+id/StartMyAdventure"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
-    <!--placeholder image-->
+
+    <!-- Username Input -->
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="371dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:hint="Username"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Title" />
+
+    <!-- Password Input -->
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="367dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <!-- Button to start adventure and log in -->
+    <Button
+        android:id="@+id/StartMyAdventure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start My Adventure!"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <!-- Placeholder image -->
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="99dp"
         android:layout_height="95dp"
         app:srcCompat="@mipmap/ic_launcher"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/StartMyAdventure"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/StartMyAdventure" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
 
-    <!--tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="16dp" />-->
+    <!-- Sensor data text view -->
     <TextView
         android:id="@+id/sensorData"
         android:layout_width="wrap_content"

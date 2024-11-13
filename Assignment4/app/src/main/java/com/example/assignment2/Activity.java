@@ -43,7 +43,7 @@ public class Activity extends AppCompatActivity {
         // Button that returns the user to the home page
         Button buttonNavigate1 = findViewById(R.id.returnHome);
         buttonNavigate1.setOnClickListener(view -> {
-            Intent intent = new Intent(Activity.this, MainActivity.class);
+            Intent intent = new Intent(Activity.this, com.example.assignment2.MainActivity.class);
             startActivity(intent);
         });
 
