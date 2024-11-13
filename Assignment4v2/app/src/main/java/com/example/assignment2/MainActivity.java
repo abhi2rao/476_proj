@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToLocationActivity() {
-        Intent intent = new Intent(MainActivity.this, LocationActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
