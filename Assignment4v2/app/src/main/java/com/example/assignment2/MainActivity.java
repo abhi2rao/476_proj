@@ -1,4 +1,4 @@
-package com.example.assignment2; // Change this to your actual package name
+package com.example.assignment2;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +14,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assignment2.DatabaseHelper;
 import com.example.assignment2.R;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.content.Context;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
     EditText usernameEditText, passwordEditText;
     Button startAdventureButton;
     DatabaseHelper databaseHelper;
     TextView sensorDataText;  // Assuming you have a TextView for sensor data
     private boolean isLoggedIn = false; // Flag to track login status
+    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Other initializations
         initializeOtherComponents();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void addTestUser() {
@@ -74,6 +87,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loginUserWithFirebase(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(MainActivity.this, "Firebase login successful", Toast.LENGTH_SHORT).show();
+                        navigateToLocationActivity();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Firebase login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            Network network = connectivityManager.getActiveNetwork();
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+            return capabilities != null && (
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+            );
+        }
+        return false;
+    }
+
+
     // Include other methods that are part of your MainActivity
     private void initializeOtherComponents() {
         // For example, setting up sensors, loading data, etc.
@@ -96,5 +136,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, LocationActivity.class);
         startActivity(intent);
     }
+
 
 }

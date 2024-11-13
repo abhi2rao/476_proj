@@ -18,6 +18,10 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import android.net.ConnectivityManager;
+import android.content.Context;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 
 public class LocationActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -73,20 +77,30 @@ public class LocationActivity extends AppCompatActivity {
 
     // Update location count in Firebase
     private void updateLocationCount(String location) {
+        if (!isNetworkAvailable()) {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         DatabaseReference locRef = databaseReference.child(location).child("count");
         locRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Long currentCount = task.getResult().getValue(Long.class);
                 if (currentCount == null) {
-                    locRef.setValue(1);
+                    locRef.setValue(1).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to set value: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                    );
                 } else {
-                    locRef.setValue(currentCount + 1);
+                    locRef.setValue(currentCount + 1).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to update value: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                    );
                 }
             } else {
-                Toast.makeText(this, "Failed to update location count.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Firebase request failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -130,4 +144,19 @@ public class LocationActivity extends AppCompatActivity {
             });
         }
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            Network network = connectivityManager.getActiveNetwork();
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+            return capabilities != null && (
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+            );
+        }
+        return false;
+    }
+
 }
